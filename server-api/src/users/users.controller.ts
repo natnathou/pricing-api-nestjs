@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { User } from 'src/entities/user.entities';
 import { UsersDto } from './dtos/users.dto';
 import { UsersService } from './users.service';
 
@@ -13,7 +14,7 @@ export class UsersController {
   FindOne() {}
 
   @Post()
-  Create(@Body() body: UsersDto) {
+  Create(@Body() body: UsersDto): Promise<User> {
     return this.usersService.Create(body);
   }
 
