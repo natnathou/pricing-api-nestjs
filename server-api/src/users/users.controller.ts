@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { UsersDto } from './dtos/users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -9,7 +10,7 @@ export class UsersController {
   FindOne() {}
 
   @Post()
-  Create() {}
+  Create(@Body() body: UsersDto) {}
 
   @Patch()
   UpdateOne() {}
