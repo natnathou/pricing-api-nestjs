@@ -1,0 +1,13 @@
+{
+  "name": "pricing-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "kill": "docker kill $(docker ps -a -q)",
+    "start": "docker compose up --build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
