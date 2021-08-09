@@ -6,7 +6,6 @@ import { UsersDto } from './dtos/users.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly name = 'UsersService';
   private readonly logger = new Logger(UsersService.name);
 
   constructor(
