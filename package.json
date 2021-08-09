@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "kill": "docker kill $(docker ps -a -q)",
-    "start": "docker compose up --build"
+    "start": "docker compose up --build",
+    "prune": "docker system prune -f"
+    
   },
   "keywords": [],
   "author": "",
