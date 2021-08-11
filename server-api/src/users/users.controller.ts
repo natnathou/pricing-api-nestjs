@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { User } from 'src/entities/user.entities';
 import { UsersDto } from './dtos/users.dto';
 import { UsersService } from './users.service';
@@ -8,19 +18,32 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  FinAll() {}
-
-  @Get('/:id')
-  FindOne() {}
-
-  @Post()
-  Create(@Body() body: UsersDto): Promise<User> {
-    return this.usersService.Create(body);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async FinAll() {
+    return (await this.usersService.finAll()) as UsersDto[];
   }
 
-  @Patch()
-  UpdateOne() {}
+  @Get('/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  FindOne(@Param('id') id: string) {
+    return this.usersService.findOne(parseInt(id));
+  }
 
-  @Delete()
-  DeleteOne() {}
+  @Post()
+  @UseInterceptors(ClassSerializerInterceptor)
+  Create(@Body() body: UsersDto): Promise<User> {
+    return this.usersService.create(body);
+  }
+
+  @Patch('/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  UpdateOne(@Param('id') id: string, @Body() body: Partial<UsersDto>) {
+    return this.usersService.updateOne(parseInt(id), body);
+  }
+
+  @Delete('/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  DeleteOne(@Param('id') id: string) {
+    return this.usersService.deleteOne(parseInt(id));
+  }
 }

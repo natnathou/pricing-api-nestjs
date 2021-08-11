@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entities';
 import { Repository } from 'typeorm';
@@ -6,25 +6,34 @@ import { UsersDto } from './dtos/users.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly logger = new Logger(UsersService.name);
-
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
-  FinAll() {}
 
-  FindOne() {}
+  async finAll() {
+    return await this.usersRepository.find();
+  }
 
-  async Create(userData: UsersDto): Promise<User> {
+  findOne(id: number) {
+    return this.usersRepository.findOne(id);
+  }
+
+  async create(userData: UsersDto): Promise<User> {
     const user = this.usersRepository.create(userData);
     await this.usersRepository.save(user);
-
-    this.logger.debug(`user ${JSON.stringify(user)} is created`);
     return user;
   }
 
-  UpdateOne() {}
+  async updateOne(id: number, data: Partial<User>) {
+    const user = await this.findOne(id);
 
-  DeleteOne() {}
+    let test = { ...user, ...data };
+    return this.usersRepository.save(test);
+  }
+
+  async deleteOne(id: number) {
+    const user = await this.findOne(id);
+    return this.usersRepository.remove(user);
+  }
 }
