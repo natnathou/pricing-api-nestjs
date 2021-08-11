@@ -7,9 +7,12 @@ import {
   AfterInsert,
   AfterUpdate,
   AfterRemove,
+  Unique,
+  Index,
 } from 'typeorm';
 
 @Entity()
+@Unique(['email'])
 export class User {
   @Exclude()
   private logger = new Logger();

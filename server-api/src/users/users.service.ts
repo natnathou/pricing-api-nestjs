@@ -36,4 +36,9 @@ export class UsersService {
     const user = await this.findOne(id);
     return this.usersRepository.remove(user);
   }
+
+  async deleteAll() {
+    const user = await this.finAll();
+    user.forEach((u) => this.usersRepository.remove(u));
+  }
 }
