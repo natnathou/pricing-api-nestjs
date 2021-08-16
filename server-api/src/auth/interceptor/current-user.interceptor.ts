@@ -13,7 +13,7 @@ import { secret } from 'src/secrets';
 
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
-  constructor(private userService: UsersService) {}
+  constructor(private readonly userService: UsersService) {}
 
   async intercept(
     context: ExecutionContext,
@@ -25,10 +25,16 @@ export class CurrentUserInterceptor implements NestInterceptor {
     try {
       const tokenVerify = verify(userToken, secret.jwtSecret) as JwtPayload;
       if (tokenVerify.id === userId) {
-        request.currentUser = await this.userService.findOne(userId);
+        const user = await this.userService.findOne(userId);
+        if (user.tokens.some((t) => t === userToken))
+          request.currentUser = user;
+        else throw new Error();
       }
-      console.log('token Verify', tokenVerify);
-    } catch (e) {}
+    } catch (e) {
+      request.currentUser = null;
+      request.session.userId = null;
+      request.session.userToken = null;
+    }
     return next.handle();
   }
 }

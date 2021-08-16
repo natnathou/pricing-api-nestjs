@@ -14,7 +14,7 @@ import {
 @Entity()
 @Unique(['email'])
 export class User {
-  private logger = new Logger();
+  private readonly logger = new Logger();
 
   @PrimaryGeneratedColumn()
   id: number;

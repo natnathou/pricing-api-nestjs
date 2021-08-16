@@ -10,7 +10,7 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(private readonly userService: UsersService) {}
 
   async signup({ email, password }: CreateUsersDto) {
     const userStored = await this.userService.find(email);
@@ -26,7 +26,10 @@ export class AuthService {
 
     return user;
   }
-  async signin({ email, password }: CreateUsersDto, session: any) {
+  async signin(
+    { email, password }: CreateUsersDto,
+    session: Record<string, any>,
+  ) {
     const [user] = await this.userService.find(email);
 
     if (!user) throw new BadRequestException('wrong credential');
@@ -52,5 +55,23 @@ export class AuthService {
 
       return user;
     }
+  }
+
+  async logout(session: Record<string, any>) {
+    const user = await this.userService.findOne(session.userId);
+
+    user.tokens = user.tokens.filter((t) => t !== session.userToken);
+    await this.userService.updateOne(session.userId, user);
+
+    return user;
+  }
+
+  async logoutAllDevices(session: Record<string, any>) {
+    const user = await this.userService.findOne(session.userId);
+
+    user.tokens = [];
+    await this.userService.updateOne(session.userId, user);
+
+    return user;
   }
 }
