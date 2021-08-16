@@ -1,19 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-} from '@nestjs/common';
-import {
-  Serialize,
-  SerializeInterceptor,
-} from 'src/interceptors/serialize.interceptor';
-import { User } from 'src/entities/user.entities';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUsersDto } from './dtos/create-user.dto';
 import { UpdateUsersDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
@@ -32,11 +18,6 @@ export class UsersController {
   @Get('/:id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(parseInt(id));
-  }
-
-  @Post()
-  create(@Body() body: CreateUsersDto): Promise<User> {
-    return this.usersService.create(body);
   }
 
   @Patch('/:id')

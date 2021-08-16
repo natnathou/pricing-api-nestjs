@@ -14,18 +14,19 @@ import {
 @Entity()
 @Unique(['email'])
 export class User {
-  @Exclude()
   private logger = new Logger();
 
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  @Expose()
   email: string;
 
   @Column()
   password: string;
+
+  @Column('text', { array: true, default: [] })
+  tokens: string[];
 
   @AfterInsert()
   logInsert() {

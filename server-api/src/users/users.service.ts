@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entities';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUsersDto } from './dtos/create-user.dto';
 
@@ -13,6 +14,10 @@ export class UsersService {
 
   async finAll() {
     return await this.usersRepository.find();
+  }
+
+  async find(email: string) {
+    return await this.usersRepository.find({ email });
   }
 
   async findOne(id: number) {
