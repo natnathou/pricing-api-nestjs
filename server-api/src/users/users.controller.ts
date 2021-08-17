@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   UseGuards,
@@ -12,13 +13,15 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUsersDto } from './dtos/create-user.dto';
 import { UpdateUsersDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
-import { UsersService } from './users.service';
+import { IUsersService } from './users.service';
 
 @Controller('users')
 @UseGuards(AuthGuard)
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject('IUsersService') private readonly usersService: IUsersService,
+  ) {}
 
   @Get()
   async finAll() {

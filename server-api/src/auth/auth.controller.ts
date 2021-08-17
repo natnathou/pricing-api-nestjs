@@ -1,13 +1,15 @@
-import { Body, Controller, Get, Post, Session } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Session } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUsersDto } from 'src/users/dtos/create-user.dto';
-import { AuthService } from './auth.service';
+import { IAuthService } from './auth.service';
 import { AuthDto } from './dtos/auth.dto';
 
 @Controller('auth')
 @Serialize(AuthDto)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject('IAuthService') private readonly authService: IAuthService,
+  ) {}
 
   @Post('register')
   register(@Body() body: CreateUsersDto) {

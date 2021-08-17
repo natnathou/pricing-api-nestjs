@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   Inject,
@@ -8,11 +7,13 @@ import {
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { secret } from 'src/secrets';
 import { User } from 'src/users/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { IUsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject('IUsersService') private readonly usersService: IUsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();

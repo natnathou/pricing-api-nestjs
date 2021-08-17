@@ -5,7 +5,12 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [UsersModule],
-  providers: [AuthService],
+  providers: [
+    {
+      provide: 'IAuthService',
+      useClass: AuthService,
+    },
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

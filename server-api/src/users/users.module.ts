@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -11,10 +11,10 @@ import { UsersService } from './users.service';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [
-    UsersService,
+    { provide: 'IUsersService', useClass: UsersService },
     { provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor },
-    AuthGuard,
+    { provide: 'IAuthGuard', useClass: AuthGuard },
   ],
-  exports: [UsersService],
+  exports: [{ provide: 'IUsersService', useClass: UsersService }],
 })
 export class UsersModule {}

@@ -1,19 +1,20 @@
 import {
   CallHandler,
   ExecutionContext,
+  Inject,
   Injectable,
   NestInterceptor,
-  UseInterceptors,
 } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import { map, Observable } from 'rxjs';
-import { UsersService } from 'src/users/users.service';
+import { Observable } from 'rxjs';
+import { IUsersService } from 'src/users/users.service';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { secret } from 'src/secrets';
 
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    @Inject('IUsersService') private readonly userService: IUsersService,
+  ) {}
 
   async intercept(
     context: ExecutionContext,

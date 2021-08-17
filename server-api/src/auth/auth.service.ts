@@ -1,7 +1,7 @@
-import { Body, Injectable, BadRequestException } from '@nestjs/common';
+import { Body, Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { CreateUsersDto } from 'src/users/dtos/create-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { IUsersService, UsersService } from 'src/users/users.service';
 import { promisify } from 'util';
 import { sign } from 'jsonwebtoken';
 import { secret } from 'src/secrets';
@@ -10,8 +10,10 @@ import { User } from 'src/users/user.entity';
 const scrypt = promisify(_scrypt);
 
 @Injectable()
-export class AuthService {
-  constructor(private readonly userService: UsersService) {}
+export class AuthService implements IAuthService {
+  constructor(
+    @Inject('IUsersService') private readonly userService: IUsersService,
+  ) {}
 
   async signup({ email, password }: CreateUsersDto): Promise<User> {
     const userStored = await this.userService.find(email);
