@@ -12,15 +12,15 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async finAll() {
+  async finAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }
 
-  async find(email: string) {
+  async find(email: string): Promise<User[]> {
     return await this.usersRepository.find({ email });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne(id);
     if (!user) throw new NotFoundException('User not found');
 
@@ -34,24 +34,34 @@ export class UsersService {
     return user;
   }
 
-  async updateOne(id: number, data: Partial<User>) {
+  async updateOne(id: number, data: Partial<User>): Promise<User> {
     const user = await this.findOne(id);
     if (!user) throw new NotFoundException('User not found');
 
     return this.usersRepository.save({ ...user, ...data });
   }
 
-  async deleteOne(id: number) {
+  async deleteOne(id: number): Promise<User> {
     const user = await this.findOne(id);
     if (!user) throw new NotFoundException('User not found');
 
     return this.usersRepository.remove(user);
   }
 
-  async deleteAll() {
+  async deleteAll(): Promise<void> {
     const user = await this.finAll();
     if (!user.length) throw new NotFoundException('Users not found');
 
     user.forEach((u) => this.usersRepository.remove(u));
   }
+}
+
+export interface IUsersService {
+  finAll(): Promise<User[]>;
+  find(email: string): Promise<User[]>;
+  findOne(id: number): Promise<User>;
+  create(userData: CreateUsersDto): Promise<User>;
+  updateOne(id: number, data: Partial<User>): Promise<User>;
+  deleteOne(id: number): Promise<User>;
+  deleteAll(): Promise<void>;
 }

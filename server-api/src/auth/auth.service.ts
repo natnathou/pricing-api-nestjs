@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { promisify } from 'util';
 import { sign } from 'jsonwebtoken';
 import { secret } from 'src/secrets';
+import { User } from 'src/users/user.entity';
 
 const scrypt = promisify(_scrypt);
 
@@ -12,7 +13,7 @@ const scrypt = promisify(_scrypt);
 export class AuthService {
   constructor(private readonly userService: UsersService) {}
 
-  async signup({ email, password }: CreateUsersDto) {
+  async signup({ email, password }: CreateUsersDto): Promise<User> {
     const userStored = await this.userService.find(email);
 
     if (userStored.length) throw new BadRequestException('User already exist');
@@ -29,7 +30,7 @@ export class AuthService {
   async signin(
     { email, password }: CreateUsersDto,
     session: Record<string, any>,
-  ) {
+  ): Promise<User> {
     const [user] = await this.userService.find(email);
 
     if (!user) throw new BadRequestException('wrong credential');
@@ -57,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async logout(session: Record<string, any>) {
+  async logout(session: Record<string, any>): Promise<User> {
     const user = await this.userService.findOne(session.userId);
 
     user.tokens = user.tokens.filter((t) => t !== session.userToken);
@@ -66,7 +67,7 @@ export class AuthService {
     return user;
   }
 
-  async logoutAllDevices(session: Record<string, any>) {
+  async logoutAllDevices(session: Record<string, any>): Promise<User> {
     const user = await this.userService.findOne(session.userId);
 
     user.tokens = [];
@@ -74,4 +75,14 @@ export class AuthService {
 
     return user;
   }
+}
+
+export interface IAuthService {
+  signup({ email, password }: CreateUsersDto): Promise<User>;
+  signin(
+    { email, password }: CreateUsersDto,
+    session: Record<string, any>,
+  ): Promise<User>;
+  logout(session: Record<string, any>): Promise<User>;
+  logoutAllDevices(session: Record<string, any>): Promise<User>;
 }
