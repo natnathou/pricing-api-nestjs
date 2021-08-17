@@ -1,6 +1,6 @@
 FROM node:alpine
 WORKDIR '/app'
-RUN npm i -g @nestjs/cli
+RUN npm i -g @nestjs/cli@8.1.1
 COPY package.json .
 RUN npm install
 COPY . .
