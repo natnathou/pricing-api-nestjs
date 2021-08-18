@@ -8,13 +8,13 @@ describe('AuthController', () => {
   let controller: AuthController;
   let fakeAuthService: Partial<IAuthService>;
 
-  beforeEach(async () => {
-    const user = {
-      id: 1,
-      email: 'eede@ede.com',
-      password: '1212',
-    } as User;
+  const user = {
+    id: 1,
+    email: 'eede@ede.com',
+    password: '1212',
+  } as User;
 
+  beforeEach(async () => {
     fakeAuthService = {
       signup: () => Promise.resolve(user),
       signin: () => Promise.resolve(user),
@@ -32,5 +32,15 @@ describe('AuthController', () => {
 
   it('AuthController is defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('AuthController return the right user when register', async () => {
+    const userRegistered = await controller.register(user);
+    expect(userRegistered).toEqual(user);
+  });
+
+  it('AuthController return the right user when login', async () => {
+    const userRegistered = await controller.register(user);
+    expect(userRegistered).toEqual(user);
   });
 });

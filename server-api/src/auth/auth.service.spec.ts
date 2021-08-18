@@ -9,11 +9,31 @@ describe('AuthService', () => {
   let service: IAuthService;
 
   beforeEach(async () => {
+    let users = [] as User[];
+
     fakeUsersService = {
-      find: (email: string) =>
-        Promise.resolve([{ id: 1, email, password: '122' }] as User[]),
-      create: ({ email, password }: { email: string; password: string }) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: ({ email, password }: { email: string; password: string }) => {
+        users.push({
+          id: Math.floor(Math.random() * 9999),
+          email,
+          password,
+          tokens: [],
+        } as User);
+
+        return Promise.resolve(users[users.length - 1]);
+      },
+
+      updateOne: (id: number, data: Partial<User>) => {
+        let user = users.filter((u) => u.id === id)[0];
+        users = users.filter((u) => u.id !== id);
+        Object.assign(user, data);
+
+        return Promise.resolve(user);
+      },
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -50,26 +70,12 @@ describe('AuthService', () => {
   });
 
   it('AuthService is login correctly', async () => {
-    fakeUsersService.find = () => Promise.resolve([] as User[]);
-
     const users = await service.signup({
       email: 'alice@elipo.com',
       password: '123',
     });
     expect(users.email).toEqual('alice@elipo.com');
     const session = { userId: '', userToken: '' };
-
-    fakeUsersService.find = () =>
-      Promise.resolve([
-        {
-          id: 1,
-          email: 'alice@elipo.com',
-          password: users.password,
-          tokens: [],
-        },
-      ] as User[]);
-
-    fakeUsersService.updateOne = () => Promise.resolve({} as User);
 
     const user = await service.signin(
       {
@@ -84,26 +90,12 @@ describe('AuthService', () => {
   });
 
   it('AuthService login failed if wrong password', async () => {
-    fakeUsersService.find = () => Promise.resolve([] as User[]);
-
     const users = await service.signup({
       email: 'alice@elipo.com',
       password: '123',
     });
-    expect(users.email).toEqual('alice@elipo.com');
     const session = { userId: '', userToken: '' };
 
-    fakeUsersService.find = () =>
-      Promise.resolve([
-        {
-          id: 1,
-          email: users.email,
-          password: users.password,
-          tokens: [],
-        },
-      ] as User[]);
-
-    fakeUsersService.updateOne = () => Promise.resolve({} as User);
     try {
       const user = await service.signin(
         {
@@ -118,9 +110,8 @@ describe('AuthService', () => {
   });
 
   it("AuthService login failed if user doesn't exist", async () => {
-    fakeUsersService.find = () => Promise.resolve([] as User[]);
+    const session = { userId: '', userToken: '' };
 
-    const session = {};
     try {
       const user = await service.signin(
         {
