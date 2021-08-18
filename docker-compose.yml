@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   api:
     build:
@@ -7,12 +7,13 @@ services:
     volumes:
       - /app/node_modules
       - ./server-api:/app
+      - ./.git:/app/.git
     restart: always
     stdin_open: true
     tty: true
     ports:
-      - '3000:3000'
-      - '9229:9229'
+      - "3000:3000"
+      - "9229:9229"
     environment:
       - CHOKIDAR_USEPOLLING=true
       - PGUSER=postgres
@@ -28,4 +29,4 @@ services:
     environment:
       POSTGRES_PASSWORD: lInUx
     ports:
-      - '5432:5432'
+      - "5432:5432"

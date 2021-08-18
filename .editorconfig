@@ -1,0 +1,5 @@
+root = true
+
+; applies to all files
+[*]
+end_of_line = lf

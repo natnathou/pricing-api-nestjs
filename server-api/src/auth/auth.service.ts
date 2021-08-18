@@ -4,7 +4,7 @@ import { CreateUsersDto } from 'src/users/dtos/create-user.dto';
 import { IUsersService, UsersService } from 'src/users/users.service';
 import { promisify } from 'util';
 import { sign } from 'jsonwebtoken';
-import { secret } from 'src/secrets';
+import { secret } from '../secrets';
 import { User } from 'src/users/user.entity';
 
 const scrypt = promisify(_scrypt);

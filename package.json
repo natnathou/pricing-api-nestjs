@@ -6,8 +6,9 @@
   "scripts": {
     "kill": "docker kill $(docker ps -a -q)",
     "start": "docker compose up --build",
-    "prune": "docker system prune -f"
-    
+    "prune": "docker system prune -f",
+    "test": "docker-compose run api npm run test:watch"
+ 
   },
   "keywords": [],
   "author": "",

@@ -3,5 +3,7 @@ WORKDIR '/app'
 RUN npm i -g @nestjs/cli@8.1.1
 COPY package.json .
 RUN npm install
+RUN apk update -q && \
+    apk add -q git
 COPY . .
 CMD ["nest", "start", "--debug", "0.0.0.0:9229", "--watch"]
