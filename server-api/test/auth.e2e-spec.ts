@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('AuthController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -16,10 +16,16 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('test if user can register)', () => {
+    const email = 'alexis@gmail.com';
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .post('/auth/register')
+      .send({ email, password: '1234' })
+      .expect(201)
+      .then((res) => {
+        const { id, email: emailReturned } = res.body;
+        expect(id).toBeDefined();
+        expect(emailReturned).toEqual(email);
+      });
   });
 });

@@ -42,12 +42,14 @@ import * as session from 'express-session';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(
-      session({
-        secret: secret.session,
-        resave: false,
-        saveUninitialized: false,
-      }),
-    );
+    consumer
+      .apply(
+        session({
+          secret: secret.session,
+          resave: false,
+          saveUninitialized: false,
+        }),
+      )
+      .forRoutes('*');
   }
 }
