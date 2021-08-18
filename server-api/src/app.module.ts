@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigService, ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -8,15 +9,25 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.PGHOST,
-      port: parseInt(process.env.PGPORT),
-      username: process.env.PGUSER,
-      password: process.env.PGPASSWORD,
-      database: process.env.PGDATABASE,
-      entities: [User],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        console.log(process.env);
+        return {
+          type: 'postgres',
+          host: process.env.PGHOST,
+          port: parseInt(process.env.PGPORT),
+          username: process.env.PGUSER,
+          password: process.env.PGPASSWORD,
+          database: config.get<string>('PG_DATABASE'),
+          entities: [User],
+          synchronize: true,
+        };
+      },
     }),
     AuthModule,
     UsersModule,

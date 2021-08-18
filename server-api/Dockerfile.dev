@@ -1,9 +1,11 @@
 FROM node:alpine
 WORKDIR '/app'
 RUN npm i -g @nestjs/cli@8.1.1
+RUN npm i -g cross-env
 COPY package.json .
 RUN npm install
 RUN apk update -q && \
     apk add -q git
 COPY . .
-CMD ["nest", "start", "--debug", "0.0.0.0:9229", "--watch"]
+CMD ["cross-env", "NODE_ENV=development", "nest", "start", "--debug", "0.0.0.0:9229", "--watch"]
+# CMD ["npm", "run", "start"]
