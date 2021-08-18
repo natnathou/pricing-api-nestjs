@@ -1,4 +1,4 @@
-CREATE DATABASE testing
+CREATE DATABASE test
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8'

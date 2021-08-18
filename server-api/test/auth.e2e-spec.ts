@@ -2,8 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import * as session from 'express-session';
-import { secret } from 'src/secrets';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -14,15 +12,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-    app.use(
-      session({
-        secret: secret.session,
-        resave: false,
-        saveUninitialized: false,
-      }),
-    );
     await app.init();
   });
 

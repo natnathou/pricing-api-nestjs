@@ -7,7 +7,9 @@
     "kill": "docker kill $(docker ps -a -q)",
     "start": "docker compose up --build",
     "prune": "docker system prune -f",
-    "test": "docker-compose run api npm run test:watch"
+    "test": "docker-compose run api npm run test:watch",
+    "test-ee": "docker-compose run api npm run test:e2e"
+
  
   },
   "keywords": [],
