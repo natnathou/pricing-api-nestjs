@@ -8,7 +8,9 @@ import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_PIPE } from '@nestjs/core';
 import { secret } from './secrets';
+import { QueueModule } from './queue/queue.module';
 import * as session from 'express-session';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -33,6 +35,13 @@ import * as session from 'express-session';
     }),
     AuthModule,
     UsersModule,
+    QueueModule,
+    BullModule.forRoot({
+      redis: {
+        host: 'redis',
+        port: 6379,
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [
