@@ -1,15 +1,16 @@
 import { OnQueueActive, Process, Processor } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Job } from 'bull';
-import { isMainThread } from 'worker_threads';
+import { isMainThread, threadId } from 'worker_threads';
 
 @Processor('audio')
 @Injectable()
 export class AudioConsumer {
   @Process()
   async transcode(job: Job<unknown>) {
-    console.log(`audio process is main thread ${isMainThread}`);
-    console.log('audio process is ', process.pid);
+    console.log(`audio isMainThread ${isMainThread}`);
+    console.log(`audio thread id is ${threadId}`);
+    console.log('audio process id is', process.pid);
     let progress = 0;
     for (let i = 0; i < 100; i++) {
       progress += 10;
