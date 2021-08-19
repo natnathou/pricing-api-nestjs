@@ -5,8 +5,13 @@ import { IQueueService } from './queue.service';
 export class QueueController {
   constructor(@Inject('IQueueService') private QueueService: IQueueService) {}
 
-  @Get()
-  Start() {
-    this.QueueService.start();
+  @Get('audio')
+  startAudio() {
+    this.QueueService.startAudio();
+  }
+
+  @Get('video')
+  startVideo() {
+    this.QueueService.startVideo();
   }
 }

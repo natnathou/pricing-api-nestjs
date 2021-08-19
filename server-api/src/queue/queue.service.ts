@@ -1,18 +1,28 @@
 import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Job, Queue } from 'bull';
-
+import { Queue } from 'bull';
 @Injectable()
 @Processor('audio')
 export class QueueService {
-  constructor(@InjectQueue('audio') private audioQueue: Queue) {}
+  constructor(
+    @InjectQueue('audio') private audioQueue: Queue,
+    @InjectQueue('video') private videoQueue: Queue,
+  ) {}
 
-  async start() {
+  async startAudio() {
     const job = await this.audioQueue.add({
       foo: 'bar',
     });
   }
+
+  async startVideo() {
+    const job = await this.videoQueue.add({
+      foo: 'bar',
+    });
+  }
 }
+
 export interface IQueueService {
-  start(): void;
+  startAudio(): void;
+  startVideo(): void;
 }

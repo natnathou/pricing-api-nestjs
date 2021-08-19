@@ -2,10 +2,15 @@ import { Module } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { QueueController } from './queue.controller';
 import { BullModule } from '@nestjs/bull';
-import { AudioConsumer } from './queue.consumer';
+import { AudioConsumer } from './audio.consumer';
+import { join } from 'path';
 
 @Module({
   imports: [
+    BullModule.registerQueue({
+      name: 'video',
+      processors: [join(__dirname, 'video-processor.js')],
+    }),
     BullModule.registerQueue({
       name: 'audio',
     }),
@@ -16,4 +21,8 @@ import { AudioConsumer } from './queue.consumer';
   ],
   controllers: [QueueController],
 })
-export class QueueModule {}
+export class QueueModule {
+  onModuleInit() {
+    console.log('Main process is ', process.pid);
+  }
+}
