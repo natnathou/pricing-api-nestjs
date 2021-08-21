@@ -11,6 +11,8 @@ import { secret } from './secrets';
 import { QueueModule } from './queue/queue.module';
 import * as session from 'express-session';
 import { BullModule } from '@nestjs/bull';
+import { ReportsModule } from './reports/reports.module';
+import { Report } from './reports/reports.entrity';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { BullModule } from '@nestjs/bull';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    // TypeOrmModule.forRoot(),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -28,8 +31,9 @@ import { BullModule } from '@nestjs/bull';
           username: process.env.PGUSER,
           password: process.env.PGPASSWORD,
           database: config.get<string>('PG_DATABASE'),
-          entities: [User],
+          entities: [User, Report],
           synchronize: true,
+          logging: ['query'],
         };
       },
     }),
@@ -42,6 +46,7 @@ import { BullModule } from '@nestjs/bull';
         port: 6379,
       },
     }),
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [

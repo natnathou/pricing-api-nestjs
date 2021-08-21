@@ -8,7 +8,9 @@
     "start": "docker compose up --build",
     "prune": "docker system prune -f",
     "test": "docker-compose run api npm run test:watch",
-    "test-ee": "docker-compose run api npm run test:e2e"
+    "test-ee": "docker-compose run api npm run test:e2e",
+    "typeOrm generate": "docker-compose run api npm run typeorm migration:generate -- -n initial-schema -o",
+    "typeOrm run": "docker-compose run api npm run typeorm migration:run"
   },
   "keywords": [],
   "author": "",

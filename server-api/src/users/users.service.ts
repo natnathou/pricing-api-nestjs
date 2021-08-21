@@ -17,6 +17,13 @@ export class UsersService {
   }
 
   async find(email: string): Promise<User[]> {
+    // return await this.usersRepository.query(
+    //   `
+    // select * from public.user
+    // where email = $1
+    // `,
+    //   [email],
+    // );
     return await this.usersRepository.find({ email });
   }
 

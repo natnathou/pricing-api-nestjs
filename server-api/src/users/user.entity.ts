@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Exclude, Expose } from 'class-transformer';
+import { Report } from 'src/reports/reports.entrity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,7 +9,7 @@ import {
   AfterUpdate,
   AfterRemove,
   Unique,
-  Index,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -27,6 +28,9 @@ export class User {
 
   @Column('text', { array: true, default: [] })
   tokens: string[];
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
 
   @AfterInsert()
   logInsert() {
