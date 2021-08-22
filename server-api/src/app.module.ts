@@ -12,7 +12,7 @@ import { QueueModule } from './queue/queue.module';
 import * as session from 'express-session';
 import { BullModule } from '@nestjs/bull';
 import { ReportsModule } from './reports/reports.module';
-import { Report } from './reports/reports.entrity';
+import { Report } from './reports/reports.entity';
 
 @Module({
   imports: [
@@ -20,23 +20,23 @@ import { Report } from './reports/reports.entrity';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    // TypeOrmModule.forRoot(),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: process.env.PGHOST,
-          port: parseInt(process.env.PGPORT),
-          username: process.env.PGUSER,
-          password: process.env.PGPASSWORD,
-          database: config.get<string>('PG_DATABASE'),
-          entities: [User, Report],
-          synchronize: true,
-          logging: ['query'],
-        };
-      },
-    }),
+    TypeOrmModule.forRoot(),
+    // TypeOrmModule.forRootAsync({
+    //   inject: [ConfigService],
+    //   useFactory: (config: ConfigService) => {
+    //     return {
+    //       type: 'postgres',
+    //       host: process.env.PGHOST,
+    //       port: parseInt(process.env.PGPORT),
+    //       username: process.env.PGUSER,
+    //       password: process.env.PGPASSWORD,
+    //       database: config.get<string>('PG_DATABASE'),
+    //       entities: [User, Report],
+    //       synchronize: true,
+    //       logging: ['query'],
+    //     };
+    //   },
+    // }),
     AuthModule,
     UsersModule,
     QueueModule,

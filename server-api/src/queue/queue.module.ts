@@ -9,7 +9,12 @@ import { join } from 'path';
   imports: [
     BullModule.registerQueue({
       name: 'video',
-      processors: [join(__dirname, 'video-processor.js')],
+      processors: [
+        join(
+          __dirname,
+          `video-processor${process.env.NODE_ENV === 'test' ? `.ts` : `.js`}`,
+        ),
+      ],
     }),
     BullModule.registerQueue({
       name: 'audio',

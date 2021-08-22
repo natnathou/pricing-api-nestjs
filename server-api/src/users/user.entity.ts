@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Exclude, Expose } from 'class-transformer';
-import { Report } from 'src/reports/reports.entrity';
+import { Report } from 'src/reports/reports.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

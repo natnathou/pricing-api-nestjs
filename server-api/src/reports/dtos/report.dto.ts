@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import { Report } from '../reports.entrity';
+import { Report } from '../reports.entity';
 
 export class ReportDto {
   @Expose()
