@@ -25,7 +25,6 @@ export class QueueService {
     const job = await this.videoQueue.add({
       foo: 'bar',
     });
-    const current = await this.videoQueue.getJob(job.id);
 
     this.videoQueue.on('completed', (job, res) => {
       console.log(res);
