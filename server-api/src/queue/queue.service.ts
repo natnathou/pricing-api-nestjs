@@ -1,6 +1,12 @@
-import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
+import {
+  InjectQueue,
+  OnQueueActive,
+  OnQueueProgress,
+  Process,
+  Processor,
+} from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
 @Injectable()
 @Processor('audio')
 export class QueueService {
@@ -18,6 +24,11 @@ export class QueueService {
   async startVideo() {
     const job = await this.videoQueue.add({
       foo: 'bar',
+    });
+    const current = await this.videoQueue.getJob(job.id);
+
+    this.videoQueue.on('completed', (job, res) => {
+      console.log(res);
     });
   }
 }

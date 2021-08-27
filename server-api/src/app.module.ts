@@ -20,23 +20,31 @@ import { Report } from './reports/reports.entity';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRoot(),
-    // TypeOrmModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => {
-    //     return {
-    //       type: 'postgres',
-    //       host: process.env.PGHOST,
-    //       port: parseInt(process.env.PGPORT),
-    //       username: process.env.PGUSER,
-    //       password: process.env.PGPASSWORD,
-    //       database: config.get<string>('PG_DATABASE'),
-    //       entities: [User, Report],
-    //       synchronize: true,
-    //       logging: ['query'],
-    //     };
-    //   },
-    // }),
+    // TypeOrmModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: process.env.PGHOST,
+          port: parseInt(process.env.PGPORT),
+          username: process.env.PGUSER,
+          password: process.env.PGPASSWORD,
+          database: config.get<string>('PG_DATABASE'),
+          entities: [User, Report],
+          synchronize: true,
+          logging: ['query'],
+          cache: {
+            type: 'ioredis',
+            options: {
+              host: 'redis',
+              port: 6379,
+            },
+            duration: 30000,
+          },
+        };
+      },
+    }),
     AuthModule,
     UsersModule,
     QueueModule,
