@@ -10,6 +10,8 @@ import { APP_PIPE } from '@nestjs/core';
 import { secret } from './secrets';
 import { QueueModule } from './queue/queue.module';
 import * as session from 'express-session';
+import cookieSession from 'cookie-session';
+
 import { BullModule } from '@nestjs/bull';
 import { ReportsModule } from './reports/reports.module';
 import { Report } from './reports/reports.entity';
@@ -66,10 +68,9 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
-        session({
-          secret: secret.session,
-          resave: false,
-          saveUninitialized: false,
+        cookieSession({
+          keys: [secret.session],
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         }),
       )
       .forRoutes('*');
